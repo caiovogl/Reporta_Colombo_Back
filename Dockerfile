@@ -1,22 +1,27 @@
-# Estágio 1: Build da aplicação
+# Estágio 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia os arquivos de projeto e restaura as dependências
-COPY ["Reporta_Colombo_Back.csproj", "./"]
-RUN dotnet restore "Reporta_Colombo_Back.csproj"
+# 1. Copia o arquivo .csproj DE DENTRO da subpasta para a raiz do WORKDIR no Docker
+COPY ["Reporta_Colombo_Back/Reporta_Colombo_Back.csproj", "Reporta_Colombo_Back/"]
+RUN dotnet restore "Reporta_Colombo_Back/Reporta_Colombo_Back.csproj"
 
-# Copia o restante dos arquivos e compila
+# 2. Copia todo o conteúdo da pasta do projeto
 COPY . .
-RUN dotnet publish "Reporta_Colombo_Back.csproj" -c Release -o /app/publish
+WORKDIR "/src/Reporta_Colombo_Back"
+RUN dotnet build "Reporta_Colombo_Back.csproj" -c Release -o /app/build
 
-# Estágio 2: Execução (Imagem final mais leve)
+# Estágio 2: Publish
+FROM build AS publish
+RUN dotnet publish "Reporta_Colombo_Back.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Estágio 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY --from=publish /app/publish .
 
-# O Render usa a porta 10000 por padrão, vamos configurar o .NET para ouvi-la
 ENV ASPNETCORE_URLS=http://*:10000
 EXPOSE 10000
 
-ENTRYPOINT ["dotnet", "SeuProjeto.dll"]
+# Certifique-se de que o nome da DLL seja exatamente o que o VS gera
+ENTRYPOINT ["dotnet", "Reporta_Colombo_Back.dll"]
