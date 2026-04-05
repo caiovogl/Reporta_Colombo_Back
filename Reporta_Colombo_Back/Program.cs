@@ -30,11 +30,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsConfig",
+    options.AddPolicy("CorsDevelopment",
         policy =>
         {
             policy.WithOrigins("http://127.0.0.1:5500",
-                                "http://www.contoso.com")
+                                "https://caiovogl.github.io/Reporta_Colombo_Front/")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    options.AddPolicy("CorsConfig",
+        policy =>
+        {
+            policy.WithOrigins("https://caiovogl.github.io/Reporta_Colombo_Front/")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -45,6 +52,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("CorsDevelopment");
     app.MapOpenApi();
 }
 
