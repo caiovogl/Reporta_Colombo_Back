@@ -18,8 +18,10 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IDenunciaService, DenunciaService>();
 
-string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reporta-colombo-firebase-adminsdk-fbsvc-a4c58aa6c7.json");
-Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", path);
+string credentialPath = Environment.GetEnvironmentVariable("FIREBASE_CONFIG_PATH")
+                        ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reporta-colombo-firebase-adminsdk-fbsvc-a4c58aa6c7.json");
+
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 builder.Services.AddSingleton(s => FirestoreDb.Create("reporta-colombo"));
 
