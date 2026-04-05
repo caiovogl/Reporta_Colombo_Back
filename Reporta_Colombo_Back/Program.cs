@@ -34,20 +34,22 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins("http://127.0.0.1:5500",
-                                "https://caiovogl.github.io/Reporta_Colombo_Front/")
+                                "https://caiovogl.github.io")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
     options.AddPolicy("CorsConfig",
         policy =>
         {
-            policy.WithOrigins("https://caiovogl.github.io/Reporta_Colombo_Front/")
+            policy.WithOrigins("https://caiovogl.github.io")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
 
 var app = builder.Build();
+
+app.UseRouting();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
