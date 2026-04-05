@@ -47,11 +47,6 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
-    options.AddPolicy("AllowAll", policy => {
-        policy.AllowAnyOrigin() // Libera QUALQUER site
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
 });
 
 var app = builder.Build();
@@ -65,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("AllowAll");
+app.UseCors("CorsConfig");
 
 app.UseHttpsRedirection();
 
