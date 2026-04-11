@@ -60,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors("CorsConfig");
+app.UseCors("CorsDevelopment");
 
 app.UseHttpsRedirection();
 
