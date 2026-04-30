@@ -34,7 +34,7 @@ namespace Reporta_Colombo_Back.Services
             int tipoDenuncia = 0;
             if (Enum.TryParse(denunciaDto.Tipo_Denuncia, out TipoDenunciaEnum resultado))
             {
-                tipoDenuncia = (int)resultado;
+                tipoDenuncia = (int)resultado - 1;
             }
 
             var denunciaData = new DenunciasModel
